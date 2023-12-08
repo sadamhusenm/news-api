@@ -5,13 +5,20 @@ const getInfo = (request, response) => {
   };
 
 const getNews = (request, response) => {
-    pool.query('SELECT * FROM news', (error, results) => {
+    const { title } = request.query;
+    let query = '';
+    if (title) {
+      query = `SELECT * FROM news WHERE title LIKE '%${title}%'`;
+    } else {
+      query = 'SELECT * FROM news';
+    }
+    pool.query(query, (error, results) => {
       if (error) {
         throw error;
       }
       response.status(200).json(results.rows)
     })
-  };
+  }; 
 
 const getSideNews = (request, response) => {
     pool.query('SELECT * FROM side_news', (error, results) => {
